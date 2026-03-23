@@ -20,6 +20,7 @@ dependencies {
     implementation("io.ktor:ktor-server-call-logging-jvm:3.0.0")
     implementation("io.ktor:ktor-server-status-pages-jvm:3.0.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.0.0")
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("ch.qos.logback:logback-classic:1.4.14")
     testImplementation(kotlin("test"))
 }

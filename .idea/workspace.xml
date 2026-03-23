@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f4d542a3-4568-4adc-a591-be51e66e2c2c" name="Changes" comment="" />
+    <list default="true" id="f4d542a3-4568-4adc-a591-be51e66e2c2c" name="Changes" comment="23032026">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,7 +47,20 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "SrQueid"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/SrQueid/ia_pdf.git",
+    "accountId": "ebb1059a-e7ec-4deb-8085-cbfcaec894de"
+  }
+}]]></component>
   <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$/ia_pdf" gradleHome="C:\Users\denis.costa\.gradle\wrapper\dists\gradle-8.14-bin\38aieal9i53h9rfe7vjup95b9\gradle-8.14" javaHome="C:\Program Files\Java\jdk-21" gradleVersion="8.14" />
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -66,6 +81,7 @@
     "Maven.ia_pdf.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "master",
     "junie.onboarding.icon.badge.shown": "true",
@@ -189,10 +205,40 @@
       <option name="presentableId" value="Default" />
       <updated>1774018472528</updated>
       <workItem from="1774018473648" duration="5657000" />
+      <workItem from="1774299212863" duration="491000" />
     </task>
+    <task id="LOCAL-00001" summary="23032026">
+      <option name="closed" value="true" />
+      <created>1774299397491</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1774299397491</updated>
+    </task>
+    <task id="LOCAL-00002" summary="23032026">
+      <option name="closed" value="true" />
+      <created>1774299483083</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774299483083</updated>
+    </task>
+    <task id="LOCAL-00003" summary="23032026">
+      <option name="closed" value="true" />
+      <created>1774299491224</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1774299491224</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="23032026" />
+    <option name="LAST_COMMIT_MESSAGE" value="23032026" />
   </component>
 </project>
