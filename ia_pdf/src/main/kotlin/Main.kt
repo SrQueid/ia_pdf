@@ -112,11 +112,19 @@ fun Application.module() {
                             h1("text-2xl font-bold mb-4 text-blue-600") { +"Resultados para: $nomeArquivo" }
                             
                             if (resultados.isEmpty()) {
-                                p("text-gray-600 italic") { +"Nenhum dado identificado conforme as regras." }
+                                div("p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-md") {
+                                    p("text-yellow-700 font-medium") { 
+                                        +"Aviso: Não foi encontrado nenhum parágrafo que contenha descrição de produtos ou ações neste documento." 
+                                    }
+                                    p("text-yellow-600 text-sm mt-2") {
+                                        +"Certifique-se de que o PDF contém as palavras-chave 'Produto' ou termos relacionados a ações."
+                                    }
+                                }
                             } else {
                                 div("space-y-2") {
                                     resultados.forEach { resultado ->
-                                        div("p-3 rounded border-l-4 ${if (resultado.startsWith("IDENTIFICADO")) "bg-blue-50 border-blue-500" else "bg-gray-50 border-gray-400 ml-4"}") {
+                                        val isProduto = resultado.startsWith("PRODUTO")
+                                        div("p-3 rounded border-l-4 ${if (isProduto) "bg-blue-50 border-blue-500" else "bg-green-50 border-green-500 ml-4"}") {
                                             +resultado
                                         }
                                     }
@@ -136,20 +144,75 @@ fun Application.module() {
 
 fun extrairDadosDoPdf(arquivo: File): List<String> {
     val resultados = mutableListOf<String>()
+    
+    // Palavras-chave e padrões
+    val patternProduto = Regex("^(?:\\d+\\.\\d+\\.\\s+)?PRODUTO\\s+\\d+", RegexOption.IGNORE_CASE)
+    val keywordsAcoesInit = listOf("A ", "O ", "As ", "Os ", "Realizar", "Providenciar", "Acompanhar", "Participar", "Adotar", "Administrar", "Preparar", "Consolidar", "Ficará", "Será", "Coletar", "Prover", "Desenvolver", "Dar suporte", "Apoio", "Assessorar", "Examinar", "Estruturar", "Monitorar", "Definir", "Verificar", "Controlar", "Mapear", "Oferecer", "Identificar", "Fornecer", "Propor", "Preparar")
+    
     try {
         PDDocument.load(arquivo).use { documento ->
             val extrator = PDFTextStripper()
             val textoCompleto = extrator.getText(documento)
             val linhas = textoCompleto.lines()
 
+            var currentType = ""
+            var currentParagraph = StringBuilder()
+
             for (linha in linhas) {
-                if (linha.isBlank()) continue
+                val linhaTrim = linha.trim()
                 
-                if (linha.contains("Produto", ignoreCase = true)) {
-                    resultados.add("IDENTIFICADO: ${linha.trim()}")
-                } else if (linha.contains("Ref:", ignoreCase = true) || linha.startsWith("-")) {
-                    resultados.add("Detalhamento: ${linha.trim()}")
+                // Ignora linhas de rodapé ou cabeçalhos de página do SEI (exemplo: URLs e datas)
+                if (linhaTrim.contains("sei.dnit.gov.br") || linhaTrim.contains("SEI/DNIT") || linhaTrim.contains("Termo de Referência")) {
+                    continue
                 }
+
+                if (linhaTrim.isBlank()) {
+                    if (currentParagraph.isNotEmpty()) {
+                        resultados.add("$currentType: ${currentParagraph.toString().trim()}")
+                        currentParagraph.setLength(0)
+                    }
+                    continue
+                }
+
+                // Verifica se é um cabeçalho de PRODUTO (ex: 16.4. PRODUTO 01)
+                if (patternProduto.containsMatchIn(linhaTrim)) {
+                    if (currentParagraph.isNotEmpty()) {
+                        resultados.add("$currentType: ${currentParagraph.toString().trim()}")
+                        currentParagraph.setLength(0)
+                    }
+                    currentType = "PRODUTO IDENTIFICADO"
+                    currentParagraph.append(linhaTrim)
+                    // Fecha o parágrafo do cabeçalho imediatamente para os próximos serem ações
+                    resultados.add("$currentType: ${currentParagraph.toString().trim()}")
+                    currentParagraph.setLength(0)
+                    currentType = "AÇÃO/DETALHE"
+                    continue
+                }
+
+                // Verifica se a linha parece ser o início de uma ação/atribuição
+                val isStartOfAction = keywordsAcoesInit.any { linhaTrim.startsWith(it, ignoreCase = true) } || 
+                                     linhaTrim.startsWith("-") || 
+                                     linhaTrim.startsWith("*") ||
+                                     linhaTrim.endsWith(":") // Ex: "À Coordenação-Geral caberá:"
+
+                if (isStartOfAction && currentType == "AÇÃO/DETALHE") {
+                    if (currentParagraph.isNotEmpty()) {
+                        resultados.add("$currentType: ${currentParagraph.toString().trim()}")
+                        currentParagraph.setLength(0)
+                    }
+                    currentParagraph.append(linhaTrim)
+                } else if (currentParagraph.isNotEmpty()) {
+                    // Continua o parágrafo anterior (tratando quebras de linha no PDF)
+                    currentParagraph.append(" ").append(linhaTrim)
+                } else if (currentType == "AÇÃO/DETALHE") {
+                    // Se já estamos em modo ação mas a linha não começa com keyword, 
+                    // provavelmente é uma continuação ou novo parágrafo de detalhe
+                    currentParagraph.append(linhaTrim)
+                }
+            }
+            
+            if (currentParagraph.isNotEmpty()) {
+                resultados.add("$currentType: ${currentParagraph.toString().trim()}")
             }
         }
     } catch (e: Exception) {
