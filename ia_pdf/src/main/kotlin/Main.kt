@@ -102,10 +102,12 @@ fun Application.module() {
                     title("Resultados da Extração")
                     script { src = "https://cdn.tailwindcss.com" }
                     style {
-                        +"""
-                        .table-auto td, .table-auto th { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; }
-                        .table-auto th { background-color: #f8fafc; text-align: left; font-weight: 600; }
-                        """
+                        unsafe {
+                            +"""
+                            .table-auto td, .table-auto th { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; }
+                            .table-auto th { background-color: #f8fafc; text-align: left; font-weight: 600; }
+                            """
+                        }
                     }
                 }
                 body("bg-gray-100 min-h-screen py-10 px-4") {
